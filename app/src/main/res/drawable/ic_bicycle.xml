@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Background with concrete texture -->
+    <item>
+        <shape android:shape="rectangle">
+            <gradient
+                android:startColor="#D3D3D3"
+                android:endColor="#B8B8B8"
+                android:angle="45" />
+            <corners android:radius="8dp" />
+        </shape>
+    </item>
+    <!-- Bicycle frame - main triangle -->
+    <item android:top="60dp" android:bottom="45dp" android:left="45dp" android:width="60dp">
+        <rotate android:fromDegrees="45">
+            <shape android:shape="rectangle">
+                <solid android:color="#8B4513" />
+            </shape>
+        </rotate>
+    </item>
+    <!-- Front wheel -->
+    <item android:top="90dp" android:bottom="30dp" android:left="20dp" android:width="50dp">
+        <shape android:shape="oval">
+            <gradient
+                android:startColor="#4A4A4A"
+                android:endColor="#2A2A2A"
+                android:type="radial" />
+            <stroke android:width="3dp" android:color="#6A6A6A" />
+        </shape>
+    </item>
+    <!-- Rear wheel -->
+    <item android:top="90dp" android:bottom="30dp" android:right="20dp" android:width="50dp">
+        <shape android:shape="oval">
+            <gradient
+                android:startColor="#4A4A4A"
+                android:endColor="#2A2A2A"
+                android:type="radial" />
+            <stroke android:width="3dp" android:color="#6A6A6A" />
+        </shape>
+    </item>
+    <!-- Seat -->
+    <item android:top="45dp" android:bottom="50dp" android:left="55dp" android:right="60dp">
+        <shape android:shape="rectangle">
+            <solid android:color="#654321" />
+            <corners android:radius="2dp" />
+        </shape>
+    </item>
+</layer-list>

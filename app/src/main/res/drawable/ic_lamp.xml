@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Background -->
+    <item>
+        <shape android:shape="rectangle">
+            <gradient
+                android:startColor="#FFFEF5"
+                android:endColor="#FFF8DC"
+                android:angle="135" />
+            <corners android:radius="8dp" />
+        </shape>
+    </item>
+    <!-- Lamp base -->
+    <item android:top="105dp" android:bottom="20dp" android:left="55dp" android:right="55dp">
+        <shape android:shape="rectangle">
+            <gradient
+                android:startColor="#FFD700"
+                android:endColor="#FFA500"
+                android:angle="90" />
+            <corners android:radius="4dp" />
+        </shape>
+    </item>
+    <!-- Lamp pole -->
+    <item android:top="90dp" android:bottom="100dp" android:left="62dp" android:right="62dp">
+        <shape android:shape="rectangle">
+            <gradient
+                android:startColor="#DAA520"
+                android:endColor="#B8860B"
+                android:angle="90" />
+        </shape>
+    </item>
+    <!-- Lamp shade -->
+    <item android:top="25dp" android:bottom="85dp" android:left="40dp" android:right="40dp">
+        <shape android:shape="rectangle">
+            <gradient
+                android:startColor="#FFA500"
+                android:endColor="#FF8C00"
+                android:angle="90" />
+            <corners android:topLeftRadius="12dp"
+                android:topRightRadius="12dp"
+                android:bottomLeftRadius="4dp"
+                android:bottomRightRadius="4dp" />
+        </shape>
+    </item>
+    <!-- Light glow effect -->
+    <item android:top="20dp" android:bottom="88dp" android:left="45dp" android:right="45dp">
+        <shape android:shape="rectangle">
+            <solid android:color="#FFFFE0" />
+            <corners android:topLeftRadius="10dp"
+                android:topRightRadius="10dp" />
+        </shape>
+    </item>
+</layer-list>

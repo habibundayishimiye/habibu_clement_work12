@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Background -->
+    <item>
+        <shape android:shape="rectangle">
+            <gradient
+                android:startColor="#FAEBD7"
+                android:endColor="#F5DEB3"
+                android:angle="135" />
+            <corners android:radius="8dp" />
+        </shape>
+    </item>
+    <!-- Chair seat -->
+    <item android:top="75dp" android:bottom="50dp" android:left="30dp" android:right="30dp">
+        <shape android:shape="rectangle">
+            <gradient
+                android:startColor="#CD853F"
+                android:endColor="#A0522D"
+                android:angle="90" />
+            <corners android:radius="4dp" />
+        </shape>
+    </item>
+    <!-- Chair back -->
+    <item android:top="35dp" android:bottom="80dp" android:left="35dp" android:right="35dp">
+        <shape android:shape="rectangle">
+            <gradient
+                android:startColor="#A0522D"
+                android:endColor="#8B4513"
+                android:angle="90" />
+            <corners android:topLeftRadius="6dp"
+                android:topRightRadius="6dp"
+                android:bottomLeftRadius="2dp"
+                android:bottomRightRadius="2dp" />
+        </shape>
+    </item>
+    <!-- Chair legs -->
+    <item android:top="100dp" android:bottom="25dp" android:left="35dp" android:width="4dp">
+        <shape android:shape="rectangle">
+            <solid android:color="#654321" />
+        </shape>
+    </item>
+    <item android:top="100dp" android:bottom="25dp" android:right="35dp" android:width="4dp">
+        <shape android:shape="rectangle">
+            <solid android:color="#654321" />
+        </shape>
+    </item>
+</layer-list>

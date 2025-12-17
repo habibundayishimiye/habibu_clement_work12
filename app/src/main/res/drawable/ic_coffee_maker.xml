@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Background -->
+    <item>
+        <shape android:shape="rectangle">
+            <gradient
+                android:startColor="#F5F5DC"
+                android:endColor="#E6E6C9"
+                android:angle="135" />
+            <corners android:radius="8dp" />
+        </shape>
+    </item>
+    <!-- Glass carafe with liquid -->
+    <item android:top="40dp" android:bottom="35dp" android:left="50dp" android:right="50dp">
+        <shape android:shape="rectangle">
+            <gradient
+                android:startColor="#8B4513"
+                android:endColor="#654321"
+                android:angle="90" />
+            <corners android:radius="4dp" />
+            <stroke android:width="2dp" android:color="#C0C0C0" />
+        </shape>
+    </item>
+    <!-- Filter cone -->
+    <item android:top="20dp" android:bottom="65dp" android:left="60dp" android:right="60dp">
+        <shape android:shape="rectangle">
+            <gradient
+                android:startColor="#D2B48C"
+                android:endColor="#A0826D"
+                android:angle="45" />
+            <corners android:topLeftRadius="8dp"
+                android:topRightRadius="8dp"
+                android:bottomLeftRadius="2dp"
+                android:bottomRightRadius="2dp" />
+        </shape>
+    </item>
+    <!-- Silver base -->
+    <item android:top="100dp" android:bottom="25dp" android:left="45dp" android:right="45dp">
+        <shape android:shape="rectangle">
+            <gradient
+                android:startColor="#C0C0C0"
+                android:endColor="#808080"
+                android:angle="90" />
+            <corners android:radius="3dp" />
+        </shape>
+    </item>
+    <!-- Handle -->
+    <item android:top="55dp" android:bottom="60dp" android:left="35dp" android:width="12dp">
+        <shape android:shape="rectangle">
+            <solid android:color="#696969" />
+            <corners android:radius="6dp" />
+        </shape>
+    </item>
+</layer-list>
