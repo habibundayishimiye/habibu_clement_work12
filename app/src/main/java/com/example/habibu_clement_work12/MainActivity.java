@@ -297,6 +297,9 @@ public class MainActivity extends AppCompatActivity {
             Intent intent = new Intent(MainActivity.this, ListActivity.class);
             startActivity(intent);
         });
+        
+        // Add option to navigate to Activity3 (Database) from menu
+        // This will be accessible via the menu options
 
         // Sell button - Show sell/create listing form
         findViewById(R.id.btnSell).setOnClickListener(v -> {
@@ -894,6 +897,7 @@ public class MainActivity extends AppCompatActivity {
     private void showMenuOptions() {
         // Show menu options dialog
         String[] menuOptions = {
+            "Student Database",
             "Settings",
             "Help & Support",
             "Privacy Policy",
@@ -907,21 +911,26 @@ public class MainActivity extends AppCompatActivity {
         builder.setItems(menuOptions, (dialog, which) -> {
             switch (which) {
                 case 0:
-                    Toast.makeText(this, "Settings", Toast.LENGTH_SHORT).show();
+                    // Navigate to Activity3 (Student Database)
+                    Intent intent = new Intent(MainActivity.this, Activity3.class);
+                    startActivity(intent);
                     break;
                 case 1:
-                    Toast.makeText(this, "Help & Support", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "Settings", Toast.LENGTH_SHORT).show();
                     break;
                 case 2:
-                    Toast.makeText(this, "Privacy Policy", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "Help & Support", Toast.LENGTH_SHORT).show();
                     break;
                 case 3:
-                    Toast.makeText(this, "Terms of Service", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "Privacy Policy", Toast.LENGTH_SHORT).show();
                     break;
                 case 4:
-                    Toast.makeText(this, "About Marketplace", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "Terms of Service", Toast.LENGTH_SHORT).show();
                     break;
                 case 5:
+                    Toast.makeText(this, "About Marketplace", Toast.LENGTH_SHORT).show();
+                    break;
+                case 6:
                     Toast.makeText(this, "Log Out", Toast.LENGTH_SHORT).show();
                     break;
             }

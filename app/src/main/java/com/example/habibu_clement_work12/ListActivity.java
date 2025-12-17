@@ -1,5 +1,6 @@
 package com.example.habibu_clement_work12;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
@@ -41,6 +42,13 @@ public class ListActivity extends AppCompatActivity {
         );
 
         listView.setAdapter(adapter);
+        
+        // Add click listener to navigate to Activity3
+        listView.setOnItemClickListener((parent, view, position, id) -> {
+            // Navigate to Activity3 (Database Activity)
+            Intent intent = new Intent(ListActivity.this, Activity3.class);
+            startActivity(intent);
+        });
     }
 
     private List<String> createSampleItems() {
