@@ -4,24 +4,25 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginBottom="@dimen/margin_small"
-    style="@style/FormCardStyle">
+    app:cardCornerRadius="@dimen/card_corner_radius"
+    app:cardElevation="2dp"
+    app:cardBackgroundColor="@color/white">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:padding="@dimen/padding_medium"
+        android:padding="@dimen/padding_small"
         android:gravity="center_vertical">
 
         <ImageView
-            android:id="@+id/imageViewPhoto"
-            android:layout_width="@dimen/image_size_small"
-            android:layout_height="@dimen/image_size_small"
-            android:layout_marginEnd="@dimen/margin_medium"
+            android:id="@+id/imageViewStudentPhoto"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:layout_marginEnd="@dimen/margin_small"
             android:scaleType="centerCrop"
-            android:background="@color/divider"
-            android:contentDescription="Student photo"
-            android:visibility="gone" />
+            android:background="#E0E0E0"
+            android:contentDescription="Student photo" />
 
         <LinearLayout
             android:layout_width="0dp"
@@ -30,7 +31,7 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/textViewName"
+                android:id="@+id/textViewStudentName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Student Name"
@@ -39,10 +40,10 @@
                 android:textColor="@color/text_primary" />
 
             <TextView
-                android:id="@+id/textViewId"
+                android:id="@+id/textViewStudentId"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="ID: 12345"
+                android:text="ID: STU001"
                 android:textSize="@dimen/text_size_small"
                 android:textColor="@color/text_secondary"
                 android:layout_marginTop="@dimen/margin_tiny" />
@@ -51,7 +52,7 @@
                 android:id="@+id/textViewDepartment"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Department"
+                android:text="Department: Computer Science"
                 android:textSize="@dimen/text_size_small"
                 android:textColor="@color/text_secondary"
                 android:layout_marginTop="@dimen/margin_tiny" />
@@ -60,46 +61,73 @@
                 android:id="@+id/textViewStatus"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Status"
-                android:textSize="@dimen/text_size_tiny"
+                android:text="Status: Active"
+                android:textSize="@dimen/text_size_small"
                 android:textColor="@color/colorPrimary"
                 android:layout_marginTop="@dimen/margin_tiny" />
 
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_marginStart="@dimen/margin_small">
-
-            <android.widget.Button
-                android:id="@+id/buttonEdit"
-                android:layout_width="wrap_content"
+            <!-- Action Buttons -->
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/edit"
-                android:textSize="@dimen/text_size_tiny"
-                android:minHeight="@dimen/button_height_small"
-                android:paddingStart="@dimen/padding_small"
-                android:paddingEnd="@dimen/padding_small"
-                android:layout_marginBottom="@dimen/margin_tiny"
-                style="@style/Widget.Material3.Button.OutlinedButton" />
+                android:orientation="horizontal"
+                android:layout_marginTop="@dimen/margin_small"
+                android:gravity="start">
 
-            <android.widget.Button
-                android:id="@+id/buttonDelete"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/delete"
-                android:textSize="@dimen/text_size_tiny"
-                android:minHeight="@dimen/button_height_small"
-                android:paddingStart="@dimen/padding_small"
-                android:paddingEnd="@dimen/padding_small"
-                android:textColor="@color/error"
-                style="@style/Widget.Material3.Button.OutlinedButton" />
+                <Button
+                    android:id="@+id/btnView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="View"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/colorPrimary"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:minWidth="0dp"
+                    android:minHeight="40dp"
+                    android:paddingStart="12dp"
+                    android:paddingEnd="12dp"
+                    android:paddingTop="8dp"
+                    android:paddingBottom="8dp"
+                    android:layout_marginEnd="4dp" />
+
+                <Button
+                    android:id="@+id/btnEdit"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Edit"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/colorPrimary"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:minWidth="0dp"
+                    android:minHeight="40dp"
+                    android:paddingStart="12dp"
+                    android:paddingEnd="12dp"
+                    android:paddingTop="8dp"
+                    android:paddingBottom="8dp"
+                    android:layout_marginEnd="4dp" />
+
+                <Button
+                    android:id="@+id/btnDelete"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Delete"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/error"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:minWidth="0dp"
+                    android:minHeight="40dp"
+                    android:paddingStart="12dp"
+                    android:paddingEnd="12dp"
+                    android:paddingTop="8dp"
+                    android:paddingBottom="8dp" />
+
+            </LinearLayout>
 
         </LinearLayout>
 
     </LinearLayout>
 
 </com.google.android.material.card.MaterialCardView>
-

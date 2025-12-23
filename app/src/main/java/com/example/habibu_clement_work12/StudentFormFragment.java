@@ -3,6 +3,7 @@ package com.example.habibu_clement_work12;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.LayoutInflater;
@@ -11,7 +12,6 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RadioButton;
@@ -19,127 +19,97 @@ import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import androidx.activity.result.ActivityResult;
-import androidx.activity.result.ActivityResultCallback;
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import java.io.InputStream;
 import java.util.Calendar;
 
 public class StudentFormFragment extends Fragment {
-    private EditText editStudentId, editStudentName, editAge, editEmail, editPhone;
+    private EditText editStudentId, editStudentName, editEnrollmentDate, editAge, editEmail, editPhone;
     private Spinner spinnerDepartment;
     private RadioGroup radioGroupStatus;
-    private CheckBox checkBoxActive;
-    private ImageView imageViewPhoto;
-    private Button btnSelectDate, btnSave, btnSelectPhoto;
-    private DatabaseHelper dbHelper;
-    private String enrollmentDate = "";
+    private RadioButton radioActive, radioInactive, radioGraduated;
+    private CheckBox checkBoxCurrentlyActive;
+    private ImageView imgStudentPhoto;
+    private Button btnSelectPhoto, btnSave, btnCancel;
+    private DatabaseHelper databaseHelper;
+    private String studentIdToEdit;
     private Bitmap selectedPhoto;
-    private Student studentToEdit;
-    private boolean isEditMode = false;
+    private static final int PICK_IMAGE = 1;
 
-    private ActivityResultLauncher<Intent> imagePickerLauncher;
-
+    @Nullable
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        dbHelper = new DatabaseHelper(getContext());
-
-        // Get student ID from arguments if editing
-        Bundle args = getArguments();
-        if (args != null && args.containsKey("studentId")) {
-            String studentId = args.getString("studentId");
-            studentToEdit = dbHelper.getStudent(studentId);
-            isEditMode = studentToEdit != null;
-        }
-
-        // Initialize image picker launcher
-        imagePickerLauncher = registerForActivityResult(
-            new ActivityResultContracts.StartActivityForResult(),
-            new ActivityResultCallback<ActivityResult>() {
-                @Override
-                public void onActivityResult(ActivityResult result) {
-                    if (result.getResultCode() == android.app.Activity.RESULT_OK && result.getData() != null) {
-                        try {
-                            selectedPhoto = MediaStore.Images.Media.getBitmap(
-                                requireContext().getContentResolver(),
-                                result.getData().getData()
-                            );
-                            imageViewPhoto.setImageBitmap(selectedPhoto);
-                            imageViewPhoto.setVisibility(View.VISIBLE);
-                        } catch (Exception e) {
-                            Toast.makeText(getContext(), "Error loading image", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                }
-            }
-        );
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.fragment_student_form, container, false);
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_student_form, container, false);
-
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        
+        databaseHelper = new DatabaseHelper(getContext());
+        
+        // Get student ID if editing
+        Bundle args = getArguments();
+        if (args != null) {
+            studentIdToEdit = args.getString("studentId");
+        }
+        
         initializeViews(view);
-        setupSpinners();
+        setupDepartmentSpinner();
         setupDatePicker();
         setupPhotoPicker();
-        setupSaveButton();
-
-        if (isEditMode && studentToEdit != null) {
-            populateForm(studentToEdit);
+        setupButtons();
+        
+        if (studentIdToEdit != null) {
+            loadStudentData();
         }
-
-        return view;
     }
 
     private void initializeViews(View view) {
         editStudentId = view.findViewById(R.id.editStudentId);
         editStudentName = view.findViewById(R.id.editStudentName);
+        editEnrollmentDate = view.findViewById(R.id.editEnrollmentDate);
         editAge = view.findViewById(R.id.editAge);
         editEmail = view.findViewById(R.id.editEmail);
         editPhone = view.findViewById(R.id.editPhone);
         spinnerDepartment = view.findViewById(R.id.spinnerDepartment);
         radioGroupStatus = view.findViewById(R.id.radioGroupStatus);
-        checkBoxActive = view.findViewById(R.id.checkBoxActive);
-        imageViewPhoto = view.findViewById(R.id.imageViewPhoto);
-        btnSelectDate = view.findViewById(R.id.btnSelectDate);
-        btnSave = view.findViewById(R.id.btnSave);
+        radioActive = view.findViewById(R.id.radioActive);
+        radioInactive = view.findViewById(R.id.radioInactive);
+        radioGraduated = view.findViewById(R.id.radioGraduated);
+        checkBoxCurrentlyActive = view.findViewById(R.id.checkBoxCurrentlyActive);
+        imgStudentPhoto = view.findViewById(R.id.imgStudentPhoto);
         btnSelectPhoto = view.findViewById(R.id.btnSelectPhoto);
-
-        if (isEditMode) {
-            editStudentId.setEnabled(false); // Don't allow editing ID
+        btnSave = view.findViewById(R.id.btnSave);
+        btnCancel = view.findViewById(R.id.btnCancel);
+        
+        if (studentIdToEdit != null) {
+            editStudentId.setEnabled(false); // Cannot edit ID
         }
     }
 
-    private void setupSpinners() {
-        String[] departments = getResources().getStringArray(R.array.departments_array);
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(
-            requireContext(),
-            android.R.layout.simple_spinner_item,
-            departments
-        );
+    private void setupDepartmentSpinner() {
+        String[] departments = {"Computer Science", "Engineering", "Business", "Arts", "Science", "Medicine"};
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), 
+                android.R.layout.simple_spinner_item, departments);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerDepartment.setAdapter(adapter);
     }
 
     private void setupDatePicker() {
-        btnSelectDate.setOnClickListener(v -> {
+        editEnrollmentDate.setOnClickListener(v -> {
             Calendar calendar = Calendar.getInstance();
-            int year = calendar.get(Calendar.YEAR);
-            int month = calendar.get(Calendar.MONTH);
-            int day = calendar.get(Calendar.DAY_OF_MONTH);
-
-            DatePickerDialog datePickerDialog = new DatePickerDialog(
-                requireContext(),
-                (view, selectedYear, selectedMonth, selectedDay) -> {
-                    enrollmentDate = String.format("%04d-%02d-%02d", selectedYear, selectedMonth + 1, selectedDay);
-                    btnSelectDate.setText(enrollmentDate);
-                },
-                year, month, day
-            );
+            DatePickerDialog datePickerDialog = new DatePickerDialog(getContext(),
+                    (view, year, month, dayOfMonth) -> {
+                        String date = String.format("%04d-%02d-%02d", year, month + 1, dayOfMonth);
+                        editEnrollmentDate.setText(date);
+                    },
+                    calendar.get(Calendar.YEAR),
+                    calendar.get(Calendar.MONTH),
+                    calendar.get(Calendar.DAY_OF_MONTH));
             datePickerDialog.show();
         });
     }
@@ -147,96 +117,108 @@ public class StudentFormFragment extends Fragment {
     private void setupPhotoPicker() {
         btnSelectPhoto.setOnClickListener(v -> {
             Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-            imagePickerLauncher.launch(intent);
+            startActivityForResult(intent, PICK_IMAGE);
         });
     }
 
-    private void setupSaveButton() {
-        btnSave.setOnClickListener(v -> saveStudent());
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == PICK_IMAGE && data != null) {
+            try {
+                InputStream inputStream = getContext().getContentResolver().openInputStream(data.getData());
+                selectedPhoto = BitmapFactory.decodeStream(inputStream);
+                imgStudentPhoto.setImageBitmap(selectedPhoto);
+            } catch (Exception e) {
+                Toast.makeText(getContext(), "Error loading image", Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 
-    private void populateForm(Student student) {
-        editStudentId.setText(student.getStudentId());
-        editStudentName.setText(student.getStudentName());
-        editAge.setText(String.valueOf(student.getAge()));
-        editEmail.setText(student.getEmail());
-        editPhone.setText(student.getPhone());
-        enrollmentDate = student.getEnrollmentDate();
-        btnSelectDate.setText(enrollmentDate);
-
-        // Set department spinner
-        String[] departments = getResources().getStringArray(R.array.departments_array);
-        for (int i = 0; i < departments.length; i++) {
-            if (departments[i].equals(student.getDepartment())) {
-                spinnerDepartment.setSelection(i);
-                break;
+    private void setupButtons() {
+        btnSave.setOnClickListener(v -> saveStudent());
+        btnCancel.setOnClickListener(v -> {
+            if (getActivity() instanceof Activity3) {
+                ((Activity3) getActivity()).loadFragment(new StudentListFragment());
             }
-        }
+        });
+    }
 
-        // Set status radio button
-        String status = student.getStatus();
-        if (status != null) {
-            if (status.equals(getString(R.string.status_active))) {
-                radioGroupStatus.check(R.id.radioActive);
-            } else if (status.equals(getString(R.string.status_inactive))) {
-                radioGroupStatus.check(R.id.radioInactive);
-            } else if (status.equals(getString(R.string.status_graduated))) {
-                radioGroupStatus.check(R.id.radioGraduated);
+    private void loadStudentData() {
+        Student student = databaseHelper.getStudentById(studentIdToEdit);
+        if (student != null) {
+            editStudentId.setText(student.getStudentId());
+            editStudentName.setText(student.getStudentName());
+            editEnrollmentDate.setText(student.getEnrollmentDate());
+            editAge.setText(String.valueOf(student.getAge()));
+            editEmail.setText(student.getEmail());
+            editPhone.setText(student.getPhone());
+            
+            // Set department spinner
+            ArrayAdapter adapter = (ArrayAdapter) spinnerDepartment.getAdapter();
+            int position = adapter.getPosition(student.getDepartment());
+            if (position >= 0) {
+                spinnerDepartment.setSelection(position);
             }
-        }
-
-        // Set photo if available
-        if (student.getPhoto() != null) {
-            selectedPhoto = student.getPhoto();
-            imageViewPhoto.setImageBitmap(selectedPhoto);
-            imageViewPhoto.setVisibility(View.VISIBLE);
+            
+            // Set status radio button
+            if (student.getStatus() != null) {
+                switch (student.getStatus()) {
+                    case "Active":
+                        radioActive.setChecked(true);
+                        break;
+                    case "Inactive":
+                        radioInactive.setChecked(true);
+                        break;
+                    case "Graduated":
+                        radioGraduated.setChecked(true);
+                        break;
+                }
+            }
+            
+            // Set photo
+            if (student.getPhoto() != null) {
+                selectedPhoto = student.getPhoto();
+                imgStudentPhoto.setImageBitmap(selectedPhoto);
+            }
         }
     }
 
     private void saveStudent() {
         String studentId = editStudentId.getText().toString().trim();
         String studentName = editStudentName.getText().toString().trim();
+        String enrollmentDate = editEnrollmentDate.getText().toString().trim();
         String ageStr = editAge.getText().toString().trim();
         String email = editEmail.getText().toString().trim();
         String phone = editPhone.getText().toString().trim();
-
-        // Validation
-        if (studentId.isEmpty()) {
-            editStudentId.setError(getString(R.string.required_field));
+        String department = spinnerDepartment.getSelectedItem().toString();
+        
+        // Validate required fields
+        if (studentId.isEmpty() || studentName.isEmpty() || enrollmentDate.isEmpty() || 
+            ageStr.isEmpty() || department.isEmpty()) {
+            Toast.makeText(getContext(), "Please fill all required fields", Toast.LENGTH_SHORT).show();
             return;
         }
-        if (studentName.isEmpty()) {
-            editStudentName.setError(getString(R.string.required_field));
-            return;
-        }
-        if (ageStr.isEmpty()) {
-            editAge.setError(getString(R.string.required_field));
-            return;
-        }
-        if (enrollmentDate.isEmpty()) {
-            Toast.makeText(getContext(), "Please select enrollment date", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
+        
         int age;
         try {
             age = Integer.parseInt(ageStr);
         } catch (NumberFormatException e) {
-            editAge.setError("Please enter a valid age");
+            Toast.makeText(getContext(), "Please enter a valid age", Toast.LENGTH_SHORT).show();
             return;
         }
-
-        String department = spinnerDepartment.getSelectedItem().toString();
-        String status = "";
+        
+        // Get selected status
+        String status = null;
         int selectedRadioId = radioGroupStatus.getCheckedRadioButtonId();
         if (selectedRadioId == R.id.radioActive) {
-            status = getString(R.string.status_active);
+            status = "Active";
         } else if (selectedRadioId == R.id.radioInactive) {
-            status = getString(R.string.status_inactive);
+            status = "Inactive";
         } else if (selectedRadioId == R.id.radioGraduated) {
-            status = getString(R.string.status_graduated);
+            status = "Graduated";
         }
-
+        
         Student student = new Student();
         student.setStudentId(studentId);
         student.setStudentName(studentName);
@@ -247,23 +229,22 @@ public class StudentFormFragment extends Fragment {
         student.setDepartment(department);
         student.setStatus(status);
         student.setPhoto(selectedPhoto);
-
+        
         long result;
-        if (isEditMode) {
-            result = dbHelper.updateStudent(student);
+        if (studentIdToEdit != null) {
+            result = databaseHelper.updateStudent(student);
+            Toast.makeText(getContext(), "Student updated successfully", Toast.LENGTH_SHORT).show();
         } else {
-            result = dbHelper.insertStudent(student);
+            result = databaseHelper.insertStudent(student);
+            Toast.makeText(getContext(), "Student added successfully", Toast.LENGTH_SHORT).show();
         }
-
+        
         if (result > 0) {
-            Toast.makeText(getContext(), getString(R.string.save_success), Toast.LENGTH_SHORT).show();
-            // Go back to list
-            if (getActivity() != null) {
-                getActivity().onBackPressed();
+            if (getActivity() instanceof Activity3) {
+                ((Activity3) getActivity()).loadFragment(new StudentListFragment());
             }
         } else {
             Toast.makeText(getContext(), "Error saving student", Toast.LENGTH_SHORT).show();
         }
     }
 }
-

@@ -27,13 +27,15 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.CourseView
 
     @Override
     public void onBindViewHolder(@NonNull CourseViewHolder holder, int position) {
-        Course course = courses.get(position);
-        holder.bind(course);
+        if (courses != null && position < courses.size()) {
+            Course course = courses.get(position);
+            holder.bind(course);
+        }
     }
 
     @Override
     public int getItemCount() {
-        return courses.size();
+        return courses != null ? courses.size() : 0;
     }
 
     class CourseViewHolder extends RecyclerView.ViewHolder {
@@ -55,4 +57,9 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.CourseView
         }
     }
 }
+
+
+
+
+
 

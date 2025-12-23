@@ -3,48 +3,54 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="4dp"
+    android:layout_margin="8dp"
     app:cardCornerRadius="8dp"
-    app:cardElevation="2dp">
+    app:cardElevation="2dp"
+    app:cardBackgroundColor="@color/white">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="horizontal"
+        android:padding="16dp"
+        android:gravity="center_vertical"
+        android:clickable="true"
+        android:focusable="true"
+        android:background="?attr/selectableItemBackground">
 
-        <ImageView
-            android:id="@+id/imgProduct"
-            android:layout_width="match_parent"
-            android:layout_height="150dp"
-            android:scaleType="centerCrop"
-            android:background="#F5F5F5"
-            android:contentDescription="Product image" />
+        <TextView
+            android:id="@+id/txtItemIcon"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:gravity="center"
+            android:text="🛋️"
+            android:textSize="32sp"
+            android:layout_marginEnd="16dp" />
 
         <LinearLayout
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="8dp">
+            android:layout_weight="1"
+            android:orientation="vertical">
 
             <TextView
-                android:id="@+id/txtProductName"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Product Name"
-                android:textColor="#333333"
-                android:textSize="14sp"
-                android:maxLines="2"
-                android:ellipsize="end" />
-
-            <TextView
-                android:id="@+id/txtProductPrice"
+                android:id="@+id/txtItemName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
+                android:text="Sofa"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:textColor="#333333" />
+
+            <TextView
+                android:id="@+id/txtItemPrice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:text="$450"
-                android:textColor="#008000"
                 android:textSize="16sp"
-                android:textStyle="bold" />
+                android:textColor="#008000"
+                android:textStyle="bold"
+                android:layout_marginTop="4dp" />
 
             <!-- Action Buttons -->
             <LinearLayout
@@ -55,7 +61,7 @@
                 android:gravity="start">
 
                 <Button
-                    android:id="@+id/btnEditProduct"
+                    android:id="@+id/btnEditItem"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Edit"
@@ -70,7 +76,7 @@
                     android:layout_marginEnd="4dp" />
 
                 <Button
-                    android:id="@+id/btnDeleteProduct"
+                    android:id="@+id/btnDeleteItem"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Delete"
@@ -84,8 +90,14 @@
                     android:paddingEnd="8dp" />
             </LinearLayout>
         </LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="›"
+            android:textSize="24sp"
+            android:textColor="#CCCCCC" />
     </LinearLayout>
 
 </com.google.android.material.card.MaterialCardView>
-
 

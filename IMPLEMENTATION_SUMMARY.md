@@ -142,3 +142,8 @@ All views use resources from the `values` folder:
 - List automatically refreshes after save/delete operations
 - Courses can be viewed in the detail fragment (course management can be added later)
 
+
+
+
+
+

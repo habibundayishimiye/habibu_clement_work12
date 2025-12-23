@@ -1,144 +1,143 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background_light"
-    android:padding="@dimen/padding_medium">
+    android:padding="16dp">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <!-- Student Details Card -->
-        <com.google.android.material.card.MaterialCardView
+        <ImageView
+            android:id="@+id/imgStudentPhoto"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:layout_gravity="center"
+            android:scaleType="centerCrop"
+            android:background="#E0E0E0"
+            android:contentDescription="Student photo"
+            android:layout_marginBottom="16dp" />
+
+        <TextView
+            android:id="@+id/txtStudentName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/margin_medium"
-            style="@style/FormCardStyle">
+            android:text="Student Name"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:layout_marginBottom="16dp" />
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="@dimen/padding_medium">
-
-                <ImageView
-                    android:id="@+id/imageViewDetailPhoto"
-                    android:layout_width="@dimen/image_size_large"
-                    android:layout_height="@dimen/image_size_large"
-                    android:layout_gravity="center"
-                    android:layout_marginBottom="@dimen/margin_medium"
-                    android:scaleType="centerCrop"
-                    android:background="@color/divider"
-                    android:contentDescription="Student photo"
-                    android:visibility="gone" />
-
-                <TextView
-                    android:id="@+id/textViewDetailName"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Student Name"
-                    android:textSize="@dimen/text_size_large"
-                    android:textStyle="bold"
-                    android:textColor="@color/text_primary"
-                    android:layout_marginBottom="@dimen/margin_small" />
-
-                <TextView
-                    android:id="@+id/textViewDetailId"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="ID: 12345"
-                    android:textSize="@dimen/text_size_medium"
-                    android:textColor="@color/text_secondary"
-                    android:layout_marginBottom="@dimen/margin_small" />
-
-                <TextView
-                    android:id="@+id/textViewDetailDate"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Enrollment Date"
-                    android:textSize="@dimen/text_size_small"
-                    android:textColor="@color/text_secondary"
-                    android:layout_marginBottom="@dimen/margin_small" />
-
-                <TextView
-                    android:id="@+id/textViewDetailAge"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Age"
-                    android:textSize="@dimen/text_size_small"
-                    android:textColor="@color/text_secondary"
-                    android:layout_marginBottom="@dimen/margin_small" />
-
-                <TextView
-                    android:id="@+id/textViewDetailEmail"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Email"
-                    android:textSize="@dimen/text_size_small"
-                    android:textColor="@color/text_secondary"
-                    android:layout_marginBottom="@dimen/margin_small" />
-
-                <TextView
-                    android:id="@+id/textViewDetailPhone"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Phone"
-                    android:textSize="@dimen/text_size_small"
-                    android:textColor="@color/text_secondary"
-                    android:layout_marginBottom="@dimen/margin_small" />
-
-                <TextView
-                    android:id="@+id/textViewDetailDepartment"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Department"
-                    android:textSize="@dimen/text_size_small"
-                    android:textColor="@color/text_secondary"
-                    android:layout_marginBottom="@dimen/margin_small" />
-
-                <TextView
-                    android:id="@+id/textViewDetailStatus"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Status"
-                    android:textSize="@dimen/text_size_small"
-                    android:textColor="@color/colorPrimary" />
-
-            </LinearLayout>
-        </com.google.android.material.card.MaterialCardView>
-
-        <!-- Courses Card -->
-        <com.google.android.material.card.MaterialCardView
+        <TextView
+            android:id="@+id/txtStudentId"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            style="@style/FormCardStyle">
+            android:text="Student ID: "
+            android:textSize="16sp"
+            android:layout_marginBottom="8dp" />
 
-            <LinearLayout
-                android:layout_width="match_parent"
+        <TextView
+            android:id="@+id/txtEnrollmentDate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Enrollment Date: "
+            android:textSize="16sp"
+            android:layout_marginBottom="8dp" />
+
+        <TextView
+            android:id="@+id/txtAge"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Age: "
+            android:textSize="16sp"
+            android:layout_marginBottom="8dp" />
+
+        <TextView
+            android:id="@+id/txtEmail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Email: "
+            android:textSize="16sp"
+            android:layout_marginBottom="8dp" />
+
+        <TextView
+            android:id="@+id/txtPhone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Phone: "
+            android:textSize="16sp"
+            android:layout_marginBottom="8dp" />
+
+        <TextView
+            android:id="@+id/txtDepartment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Department: "
+            android:textSize="16sp"
+            android:layout_marginBottom="8dp" />
+
+        <TextView
+            android:id="@+id/txtStatus"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Status: "
+            android:textSize="16sp"
+            android:layout_marginBottom="24dp" />
+
+        <!-- Action Buttons -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="2"
+            android:layout_marginBottom="24dp">
+
+            <Button
+                android:id="@+id/btnEdit"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="@dimen/padding_medium">
+                android:layout_weight="1"
+                android:text="@string/edit"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:textColor="@color/colorPrimary"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:minHeight="48dp"
+                android:layout_marginEnd="8dp" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/student_courses"
-                    android:textSize="@dimen/text_size_medium"
-                    android:textStyle="bold"
-                    android:textColor="@color/text_primary"
-                    android:layout_marginBottom="@dimen/margin_medium" />
+            <Button
+                android:id="@+id/btnDelete"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/delete"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:textColor="@color/error"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:minHeight="48dp"
+                android:layout_marginStart="8dp" />
 
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/recyclerViewCourses"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+        </LinearLayout>
 
-            </LinearLayout>
-        </com.google.android.material.card.MaterialCardView>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Courses"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="8dp" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerViewCourses"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:listitem="@layout/item_course" />
 
     </LinearLayout>
-</ScrollView>
 
+</androidx.core.widget.NestedScrollView>

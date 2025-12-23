@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -12,6 +13,7 @@ import android.provider.MediaStore;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -73,6 +75,11 @@ public class MainActivity extends AppCompatActivity {
     private ActivityResultLauncher<Intent> cameraLauncher;
     private ActivityResultLauncher<Intent> galleryLauncher;
     private ImageView selectedPhotoImageView;
+    private Bitmap selectedProductImage;
+    private int editingProductId = -1; // -1 means new product, otherwise editing existing
+    
+    // Database
+    private ProductDatabaseHelper productDatabaseHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -141,10 +148,11 @@ public class MainActivity extends AppCompatActivity {
         GridLayoutManager layoutManager = new GridLayoutManager(this, 2);
         recyclerViewProducts.setLayoutManager(layoutManager);
 
-        // Create sample products
-        List<Product> products = createSampleProducts();
-        productAdapter = new ProductAdapter(products);
-        recyclerViewProducts.setAdapter(productAdapter);
+        // Initialize database
+        productDatabaseHelper = new ProductDatabaseHelper(this);
+        
+        // Load products from database
+        loadProductsFromDatabase();
         
         // Setup Categories RecyclerView
         setupCategoriesView();
@@ -187,6 +195,7 @@ public class MainActivity extends AppCompatActivity {
                     if (extras != null) {
                         Bitmap imageBitmap = (Bitmap) extras.get("data");
                         if (imageBitmap != null) {
+                            selectedProductImage = imageBitmap; // Store bitmap for database
                             if (selectedPhotoImageView != null) {
                                 selectedPhotoImageView.setImageBitmap(imageBitmap);
                                 selectedPhotoImageView.setVisibility(View.VISIBLE);
@@ -226,6 +235,16 @@ public class MainActivity extends AppCompatActivity {
                 if (result.getResultCode() == android.app.Activity.RESULT_OK && result.getData() != null) {
                     Uri selectedImageUri = result.getData().getData();
                     if (selectedImageUri != null) {
+                        try {
+                            // Convert URI to Bitmap for database storage
+                            android.content.ContentResolver resolver = getContentResolver();
+                            java.io.InputStream inputStream = resolver.openInputStream(selectedImageUri);
+                            selectedProductImage = BitmapFactory.decodeStream(inputStream);
+                            if (inputStream != null) inputStream.close();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        
                         if (selectedPhotoImageView != null) {
                             selectedPhotoImageView.setVisibility(View.VISIBLE);
                             View placeholder = findViewById(R.id.layoutPhotoPlaceholder);
@@ -840,6 +859,32 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.btnPublishListing).setOnClickListener(v -> {
             publishListing();
         });
+        
+        // Reset form when opening sell view (unless editing)
+        if (editingProductId == -1) {
+            resetSellForm();
+        }
+    }
+    
+    private void resetSellForm() {
+        android.widget.EditText editTitle = findViewById(R.id.editProductTitle);
+        android.widget.EditText editPrice = findViewById(R.id.editProductPrice);
+        android.widget.EditText editDescription = findViewById(R.id.editProductDescription);
+        android.widget.Spinner spinnerCategory = findViewById(R.id.spinnerCategory);
+        ImageView imgSellPhoto = findViewById(R.id.imgSellPhoto);
+        Button btnPublish = findViewById(R.id.btnPublishListing);
+        
+        if (editTitle != null) editTitle.setText("");
+        if (editPrice != null) editPrice.setText("");
+        if (editDescription != null) editDescription.setText("");
+        if (spinnerCategory != null) spinnerCategory.setSelection(0);
+        if (btnPublish != null) btnPublish.setText("Publish Listing");
+        if (imgSellPhoto != null) {
+            imgSellPhoto.setVisibility(View.GONE);
+            findViewById(R.id.layoutPhotoPlaceholder).setVisibility(View.VISIBLE);
+        }
+        selectedProductImage = null;
+        editingProductId = -1;
     }
     
     private void publishListing() {
@@ -847,6 +892,7 @@ public class MainActivity extends AppCompatActivity {
         android.widget.EditText editPrice = findViewById(R.id.editProductPrice);
         android.widget.EditText editDescription = findViewById(R.id.editProductDescription);
         android.widget.Spinner spinnerCategory = findViewById(R.id.spinnerCategory);
+        ImageView imgSellPhoto = findViewById(R.id.imgSellPhoto);
         
         String title = editTitle.getText().toString().trim();
         String price = editPrice.getText().toString().trim();
@@ -870,20 +916,160 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
         
-        // Create new product and add to list
-        Product newProduct = new Product(title, price, android.R.drawable.ic_menu_gallery);
-        productAdapter.addProduct(newProduct);
+        // Create new product
+        Product product = new Product(title, price, null);
+        product.setDescription(description);
+        product.setCategory(category);
+        
+        long result;
+        if (editingProductId > 0) {
+            // Update existing product
+            product.setId(editingProductId);
+            result = productDatabaseHelper.updateProduct(product, description, category, selectedProductImage);
+            if (result > 0) {
+                Toast.makeText(this, "Product updated successfully!", Toast.LENGTH_LONG).show();
+            } else {
+                Toast.makeText(this, "Error updating product", Toast.LENGTH_SHORT).show();
+                return;
+            }
+        } else {
+            // Insert new product
+            result = productDatabaseHelper.insertProduct(product, description, category, selectedProductImage);
+            if (result > 0) {
+                Toast.makeText(this, "Listing published successfully!", Toast.LENGTH_LONG).show();
+            } else {
+                Toast.makeText(this, "Error saving product", Toast.LENGTH_SHORT).show();
+                return;
+            }
+        }
         
         // Clear form
         editTitle.setText("");
         editPrice.setText("");
         editDescription.setText("");
         spinnerCategory.setSelection(0);
+        selectedProductImage = null;
+        editingProductId = -1;
+        if (imgSellPhoto != null) {
+            imgSellPhoto.setVisibility(View.GONE);
+            findViewById(R.id.layoutPhotoPlaceholder).setVisibility(View.VISIBLE);
+        }
         
-        // Show success message and switch to products view
-        Toast.makeText(this, "Listing published successfully!", Toast.LENGTH_LONG).show();
+        // Reset publish button text
+        Button btnPublish = findViewById(R.id.btnPublishListing);
+        if (btnPublish != null) {
+            btnPublish.setText("Publish Listing");
+        }
+        
+        // Reload products from database
+        loadProductsFromDatabase();
+        
+        // Switch to products view
         showView(viewProducts);
         recyclerViewProducts.smoothScrollToPosition(0);
+    }
+    
+    private void loadProductsFromDatabase() {
+        List<Product> products = productDatabaseHelper.getAllProducts();
+        
+        // If database is empty, add sample products
+        if (products.isEmpty()) {
+            List<Product> sampleProducts = createSampleProducts();
+            for (Product product : sampleProducts) {
+                productDatabaseHelper.insertProduct(product, "", "Furniture", null);
+            }
+            products = productDatabaseHelper.getAllProducts();
+        }
+        
+        productAdapter = new ProductAdapter(products);
+        productAdapter.setOnProductActionListener(new ProductAdapter.OnProductActionListener() {
+            @Override
+            public void onEditClick(Product product) {
+                editProduct(product);
+            }
+
+            @Override
+            public void onDeleteClick(Product product) {
+                showDeleteProductConfirmation(product);
+            }
+        });
+        recyclerViewProducts.setAdapter(productAdapter);
+    }
+    
+    private void editProduct(Product product) {
+        // Store product ID for update first
+        editingProductId = product.getId();
+        
+        // Load product data into form
+        showView(viewSell);
+        setupSellForm(); // This will set up the form, but we'll override with product data
+        
+        android.widget.EditText editTitle = findViewById(R.id.editProductTitle);
+        android.widget.EditText editPrice = findViewById(R.id.editProductPrice);
+        android.widget.EditText editDescription = findViewById(R.id.editProductDescription);
+        android.widget.Spinner spinnerCategory = findViewById(R.id.spinnerCategory);
+        ImageView imgSellPhoto = findViewById(R.id.imgSellPhoto);
+        
+        if (editTitle != null) editTitle.setText(product.getName());
+        if (editPrice != null) editPrice.setText(product.getPrice());
+        if (editDescription != null) editDescription.setText(product.getDescription() != null ? product.getDescription() : "");
+        
+        // Set category spinner
+        if (spinnerCategory != null && product.getCategory() != null) {
+            android.widget.ArrayAdapter adapter = (android.widget.ArrayAdapter) spinnerCategory.getAdapter();
+            if (adapter != null) {
+                int position = adapter.getPosition(product.getCategory());
+                if (position >= 0) {
+                    spinnerCategory.setSelection(position);
+                }
+            }
+        }
+        
+        // Set image
+        if (imgSellPhoto != null) {
+            if (product.getImageBitmap() != null) {
+                selectedProductImage = product.getImageBitmap();
+                imgSellPhoto.setImageBitmap(product.getImageBitmap());
+                imgSellPhoto.setVisibility(View.VISIBLE);
+                View placeholder = findViewById(R.id.layoutPhotoPlaceholder);
+                if (placeholder != null) {
+                    placeholder.setVisibility(View.GONE);
+                }
+            } else if (product.hasImageUrl()) {
+                Glide.with(this)
+                    .load(product.getImageUrl())
+                    .centerCrop()
+                    .into(imgSellPhoto);
+                imgSellPhoto.setVisibility(View.VISIBLE);
+                View placeholder = findViewById(R.id.layoutPhotoPlaceholder);
+                if (placeholder != null) {
+                    placeholder.setVisibility(View.GONE);
+                }
+            }
+        }
+        
+        // Update publish button to say "Update Listing"
+        Button btnPublish = findViewById(R.id.btnPublishListing);
+        if (btnPublish != null) {
+            btnPublish.setText("Update Listing");
+        }
+    }
+    
+    private void showDeleteProductConfirmation(Product product) {
+        new AlertDialog.Builder(this)
+                .setTitle("Delete Product")
+                .setMessage("Are you sure you want to delete \"" + product.getName() + "\"?")
+                .setPositiveButton("Delete", (dialog, which) -> {
+                    int result = productDatabaseHelper.deleteProduct(product.getId());
+                    if (result > 0) {
+                        Toast.makeText(this, "Product deleted successfully", Toast.LENGTH_SHORT).show();
+                        loadProductsFromDatabase(); // Refresh list
+                    } else {
+                        Toast.makeText(this, "Error deleting product", Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .setNegativeButton("Cancel", null)
+                .show();
     }
 
     private void showMessengerContent() {
@@ -895,21 +1081,35 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void showMenuOptions() {
-        // Show menu options dialog
-        String[] menuOptions = {
-            "Student Database",
-            "Settings",
-            "Help & Support",
-            "Privacy Policy",
-            "Terms of Service",
-            "About",
-            "Log Out"
-        };
+        // Create menu options with icons
+        List<MenuOption> menuOptions = new ArrayList<>();
+        menuOptions.add(new MenuOption("Student Database", "📚"));
+        menuOptions.add(new MenuOption("Settings", "⚙️"));
+        menuOptions.add(new MenuOption("Help & Support", "💬"));
+        menuOptions.add(new MenuOption("Privacy Policy", "🔒"));
+        menuOptions.add(new MenuOption("Terms of Service", "📄"));
+        menuOptions.add(new MenuOption("About", "ℹ️"));
+        menuOptions.add(new MenuOption("Log Out", "🚪"));
         
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Menu");
-        builder.setItems(menuOptions, (dialog, which) -> {
-            switch (which) {
+        // Create custom dialog
+        View dialogView = getLayoutInflater().inflate(R.layout.dialog_menu, null);
+        RecyclerView recyclerViewMenu = dialogView.findViewById(R.id.recyclerViewMenu);
+        Button btnCancel = dialogView.findViewById(R.id.btnCancel);
+        
+        // Setup RecyclerView
+        recyclerViewMenu.setLayoutManager(new androidx.recyclerview.widget.LinearLayoutManager(this));
+        MenuAdapter menuAdapter = new MenuAdapter(menuOptions);
+        recyclerViewMenu.setAdapter(menuAdapter);
+        
+        // Create dialog
+        AlertDialog dialog = new AlertDialog.Builder(this)
+                .setView(dialogView)
+                .create();
+        
+        // Setup menu item click listener
+        menuAdapter.setOnMenuClickListener(position -> {
+            dialog.dismiss();
+            switch (position) {
                 case 0:
                     // Navigate to Activity3 (Student Database)
                     Intent intent = new Intent(MainActivity.this, Activity3.class);
@@ -935,8 +1135,17 @@ public class MainActivity extends AppCompatActivity {
                     break;
             }
         });
-        builder.setNegativeButton("Cancel", null);
-        builder.show();
+        
+        // Setup cancel button
+        btnCancel.setOnClickListener(v -> dialog.dismiss());
+        
+        // Show dialog
+        dialog.show();
+        
+        // Make dialog wider and rounded
+        if (dialog.getWindow() != null) {
+            dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        }
     }
 
     private void showHomeContent() {

@@ -1,232 +1,234 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background_light"
-    android:padding="@dimen/padding_medium">
+    android:padding="16dp">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <com.google.android.material.card.MaterialCardView
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/student_id"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="8dp" />
+
+        <EditText
+            android:id="@+id/editStudentId"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/margin_medium"
-            style="@style/FormCardStyle">
+            android:hint="@string/enter_student_id"
+            android:minHeight="48dp"
+            android:padding="12dp"
+            android:textSize="16sp"
+            android:layout_marginBottom="16dp" />
 
-            <LinearLayout
-                android:layout_width="match_parent"
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/student_name"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="8dp" />
+
+        <EditText
+            android:id="@+id/editStudentName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/enter_student_name"
+            android:minHeight="48dp"
+            android:padding="12dp"
+            android:textSize="16sp"
+            android:layout_marginBottom="16dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/enrollment_date"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="8dp" />
+
+        <EditText
+            android:id="@+id/editEnrollmentDate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/select_date"
+            android:minHeight="48dp"
+            android:padding="12dp"
+            android:textSize="16sp"
+            android:focusable="false"
+            android:clickable="true"
+            android:layout_marginBottom="16dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/student_age"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="8dp" />
+
+        <EditText
+            android:id="@+id/editAge"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/enter_age"
+            android:minHeight="48dp"
+            android:padding="12dp"
+            android:textSize="16sp"
+            android:inputType="number"
+            android:layout_marginBottom="16dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/student_email"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="8dp" />
+
+        <EditText
+            android:id="@+id/editEmail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/enter_email"
+            android:minHeight="48dp"
+            android:padding="12dp"
+            android:textSize="16sp"
+            android:inputType="textEmailAddress"
+            android:layout_marginBottom="16dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/student_phone"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="8dp" />
+
+        <EditText
+            android:id="@+id/editPhone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/enter_phone"
+            android:minHeight="48dp"
+            android:padding="12dp"
+            android:textSize="16sp"
+            android:inputType="phone"
+            android:layout_marginBottom="16dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/student_department"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="8dp" />
+
+        <Spinner
+            android:id="@+id/spinnerDepartment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="48dp"
+            android:padding="12dp"
+            android:layout_marginBottom="16dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/student_status"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="8dp" />
+
+        <RadioGroup
+            android:id="@+id/radioGroupStatus"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="16dp">
+
+            <RadioButton
+                android:id="@+id/radioActive"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="@dimen/padding_medium">
+                android:layout_weight="1"
+                android:text="Active" />
 
-                <!-- Student Photo -->
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/student_photo"
-                    style="@style/FormLabelStyle" />
+            <RadioButton
+                android:id="@+id/radioInactive"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Inactive" />
 
-                <ImageView
-                    android:id="@+id/imageViewPhoto"
-                    android:layout_width="@dimen/image_size_large"
-                    android:layout_height="@dimen/image_size_large"
-                    android:layout_gravity="center"
-                    android:layout_marginBottom="@dimen/margin_small"
-                    android:scaleType="centerCrop"
-                    android:background="@color/divider"
-                    android:visibility="gone"
-                    android:contentDescription="@string/student_photo" />
+            <RadioButton
+                android:id="@+id/radioGraduated"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Graduated" />
+        </RadioGroup>
 
-                <Button
-                    android:id="@+id/btnSelectPhoto"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:text="Select Photo"
-                    style="@style/SecondaryButtonStyle"
-                    android:layout_marginBottom="@dimen/margin_medium" />
+        <CheckBox
+            android:id="@+id/checkBoxCurrentlyActive"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Currently Active"
+            android:textSize="16sp"
+            android:layout_marginBottom="16dp" />
 
-                <!-- Student ID -->
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/student_id"
-                    style="@style/FormLabelStyle" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/student_photo"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="8dp" />
 
-                <EditText
-                    android:id="@+id/editStudentId"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/enter_student_id"
-                    android:inputType="text"
-                    style="@style/FormInputStyle"
-                    android:layout_marginBottom="@dimen/margin_medium" />
+        <ImageView
+            android:id="@+id/imgStudentPhoto"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:layout_gravity="center"
+            android:scaleType="centerCrop"
+            android:background="#E0E0E0"
+            android:contentDescription="Student photo"
+            android:layout_marginBottom="16dp" />
 
-                <!-- Student Name -->
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/student_name"
-                    style="@style/FormLabelStyle" />
+        <Button
+            android:id="@+id/btnSelectPhoto"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="Select Photo"
+            android:layout_marginBottom="24dp" />
 
-                <EditText
-                    android:id="@+id/editStudentName"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/enter_student_name"
-                    android:inputType="textPersonName"
-                    style="@style/FormInputStyle"
-                    android:layout_marginBottom="@dimen/margin_medium" />
+        <Button
+            android:id="@+id/btnSave"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/save"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:minHeight="56dp"
+            android:layout_marginBottom="8dp" />
 
-                <!-- Enrollment Date -->
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/enrollment_date"
-                    style="@style/FormLabelStyle" />
-
-                <Button
-                    android:id="@+id/btnSelectDate"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/select_date"
-                    android:textAlignment="textStart"
-                    android:gravity="start|center_vertical"
-                    android:paddingStart="@dimen/padding_small"
-                    android:paddingEnd="@dimen/padding_small"
-                    style="@style/FormInputStyle"
-                    android:background="@android:drawable/edit_text"
-                    android:textColor="@color/text_primary"
-                    android:layout_marginBottom="@dimen/margin_medium" />
-
-                <!-- Age -->
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/student_age"
-                    style="@style/FormLabelStyle" />
-
-                <EditText
-                    android:id="@+id/editAge"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/enter_age"
-                    android:inputType="number"
-                    style="@style/FormInputStyle"
-                    android:layout_marginBottom="@dimen/margin_medium" />
-
-                <!-- Email -->
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/student_email"
-                    style="@style/FormLabelStyle" />
-
-                <EditText
-                    android:id="@+id/editEmail"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/enter_email"
-                    android:inputType="textEmailAddress"
-                    style="@style/FormInputStyle"
-                    android:layout_marginBottom="@dimen/margin_medium" />
-
-                <!-- Phone -->
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/student_phone"
-                    style="@style/FormLabelStyle" />
-
-                <EditText
-                    android:id="@+id/editPhone"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/enter_phone"
-                    android:inputType="phone"
-                    style="@style/FormInputStyle"
-                    android:layout_marginBottom="@dimen/margin_medium" />
-
-                <!-- Department (Dropdown/Spinner) -->
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/student_department"
-                    style="@style/FormLabelStyle" />
-
-                <Spinner
-                    android:id="@+id/spinnerDepartment"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:minHeight="@dimen/button_height_medium"
-                    android:background="@android:drawable/edit_text"
-                    android:padding="@dimen/padding_small"
-                    android:layout_marginBottom="@dimen/margin_medium" />
-
-                <!-- Status (Radio Buttons) -->
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/student_status"
-                    style="@style/FormLabelStyle" />
-
-                <RadioGroup
-                    android:id="@+id/radioGroupStatus"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:layout_marginBottom="@dimen/margin_medium">
-
-                    <RadioButton
-                        android:id="@+id/radioActive"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="@string/status_active"
-                        android:textSize="@dimen/text_size_small" />
-
-                    <RadioButton
-                        android:id="@+id/radioInactive"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="@string/status_inactive"
-                        android:textSize="@dimen/text_size_small" />
-
-                    <RadioButton
-                        android:id="@+id/radioGraduated"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="@string/status_graduated"
-                        android:textSize="@dimen/text_size_small" />
-                </RadioGroup>
-
-                <!-- Active Checkbox -->
-                <CheckBox
-                    android:id="@+id/checkBoxActive"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Currently Active"
-                    android:textSize="@dimen/text_size_small"
-                    android:layout_marginBottom="@dimen/margin_medium" />
-
-                <!-- Save Button -->
-                <Button
-                    android:id="@+id/btnSave"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/save"
-                    style="@style/PrimaryButtonStyle"
-                    android:layout_marginTop="@dimen/margin_medium" />
-
-            </LinearLayout>
-        </com.google.android.material.card.MaterialCardView>
+        <Button
+            android:id="@+id/btnCancel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/cancel"
+            android:textSize="18sp"
+            android:minHeight="56dp" />
 
     </LinearLayout>
-</ScrollView>
 
+</androidx.core.widget.NestedScrollView>

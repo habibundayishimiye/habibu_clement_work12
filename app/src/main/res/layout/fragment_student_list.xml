@@ -1,51 +1,65 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/background_light">
+    android:layout_height="match_parent">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewStudents"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:padding="@dimen/padding_medium" />
+        android:padding="8dp"
+        android:paddingBottom="80dp"
+        tools:listitem="@layout/item_student"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
+    <!-- Empty State View -->
     <LinearLayout
         android:id="@+id/layoutEmptyState"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
         android:orientation="vertical"
         android:gravity="center"
-        android:visibility="gone">
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <TextView
-            android:id="@+id/textViewEmpty"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/no_students"
-            android:textSize="@dimen/text_size_medium"
-            android:textColor="@color/text_secondary"
-            android:textAlignment="center"
-            android:layout_marginBottom="@dimen/margin_medium" />
+            android:text="No students yet"
+            android:textSize="18sp"
+            android:textColor="#666666"
+            android:layout_marginBottom="16dp" />
 
         <Button
-            android:id="@+id/buttonAddStudent"
+            android:id="@+id/btnAddStudentEmpty"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/add_student"
-            android:textSize="@dimen/text_size_medium"
+            android:text="+Add Student"
+            android:textSize="16sp"
             android:textStyle="bold"
-            android:textColor="@color/white"
-            android:backgroundTint="@color/colorPrimary"
-            android:minHeight="@dimen/button_height_medium"
-            android:paddingStart="@dimen/padding_medium"
-            android:paddingEnd="@dimen/padding_medium"
-            android:drawableStart="@android:drawable/ic_input_add"
-            android:drawablePadding="@dimen/padding_small"
-            android:gravity="center" />
-
+            android:minHeight="48dp"
+            android:minWidth="200dp"
+            android:paddingStart="24dp"
+            android:paddingEnd="24dp" />
     </LinearLayout>
 
-</FrameLayout>
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fabAddStudent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/fab_margin"
+        android:contentDescription="+Add Student"
+        android:src="@android:drawable/ic_input_add"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:tint="@android:color/white" />
 
+</androidx.constraintlayout.widget.ConstraintLayout>

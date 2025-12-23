@@ -37,5 +37,8 @@
     <!-- Card Elevation -->
     <dimen name="card_elevation">4dp</dimen>
     <dimen name="card_corner_radius">8dp</dimen>
+    
+    <!-- FAB Margin -->
+    <dimen name="fab_margin">16dp</dimen>
 </resources>
 

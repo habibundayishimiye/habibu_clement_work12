@@ -3,6 +3,7 @@ package com.example.habibu_clement_work12;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -18,6 +19,16 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
 
     private List<Product> products;
     private List<Product> productsFiltered;
+    private OnProductActionListener listener;
+
+    public interface OnProductActionListener {
+        void onEditClick(Product product);
+        void onDeleteClick(Product product);
+    }
+
+    public void setOnProductActionListener(OnProductActionListener listener) {
+        this.listener = listener;
+    }
 
     public ProductAdapter(List<Product> products) {
         this.products = new ArrayList<>(products);
@@ -38,8 +49,10 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
         holder.txtName.setText(product.getName());
         holder.txtPrice.setText(product.getPrice());
         
-        // Load image from URL if available, otherwise use drawable resource
-        if (product.hasImageUrl()) {
+        // Load image - priority: Bitmap > URL > Resource ID
+        if (product.getImageBitmap() != null) {
+            holder.imgProduct.setImageBitmap(product.getImageBitmap());
+        } else if (product.hasImageUrl()) {
             Glide.with(holder.itemView.getContext())
                     .load(product.getImageUrl())
                     .centerCrop()
@@ -48,7 +61,22 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
                     .into(holder.imgProduct);
         } else if (product.getImageResourceId() != 0) {
             holder.imgProduct.setImageResource(product.getImageResourceId());
+        } else {
+            holder.imgProduct.setImageResource(android.R.drawable.ic_menu_gallery);
         }
+
+        // Setup button click listeners
+        holder.btnEdit.setOnClickListener(v -> {
+            if (listener != null) {
+                listener.onEditClick(product);
+            }
+        });
+
+        holder.btnDelete.setOnClickListener(v -> {
+            if (listener != null) {
+                listener.onDeleteClick(product);
+            }
+        });
     }
 
     @Override
@@ -82,12 +110,16 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
         ImageView imgProduct;
         TextView txtName;
         TextView txtPrice;
+        Button btnEdit;
+        Button btnDelete;
 
         ProductViewHolder(@NonNull View itemView) {
             super(itemView);
             imgProduct = itemView.findViewById(R.id.imgProduct);
             txtName = itemView.findViewById(R.id.txtProductName);
             txtPrice = itemView.findViewById(R.id.txtProductPrice);
+            btnEdit = itemView.findViewById(R.id.btnEditProduct);
+            btnDelete = itemView.findViewById(R.id.btnDeleteProduct);
         }
     }
 }

@@ -1,36 +1,33 @@
 package com.example.habibu_clement_work12;
 
-import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class StudentAdapter extends RecyclerView.Adapter<StudentAdapter.StudentViewHolder> {
     private List<Student> students;
-    private OnStudentClickListener listener;
+    private OnStudentActionListener listener;
 
-    public interface OnStudentClickListener {
-        void onStudentClick(Student student);
-        void onStudentEdit(Student student);
-        void onStudentDelete(Student student);
+    public interface OnStudentActionListener {
+        void onViewClick(String studentId);
+        void onEditClick(String studentId);
+        void onDeleteClick(String studentId);
     }
 
-    public StudentAdapter(List<Student> students, OnStudentClickListener listener) {
+    public StudentAdapter(List<Student> students) {
         this.students = students;
-        this.listener = listener;
     }
 
-    public void updateStudents(List<Student> newStudents) {
-        this.students = newStudents;
-        notifyDataSetChanged();
+    public void setOnStudentActionListener(OnStudentActionListener listener) {
+        this.listener = listener;
     }
 
     @NonNull
@@ -44,58 +41,67 @@ public class StudentAdapter extends RecyclerView.Adapter<StudentAdapter.StudentV
     @Override
     public void onBindViewHolder(@NonNull StudentViewHolder holder, int position) {
         Student student = students.get(position);
-        holder.bind(student);
+        holder.textViewStudentName.setText(student.getStudentName());
+        holder.textViewStudentId.setText("ID: " + student.getStudentId());
+        holder.textViewDepartment.setText("Department: " + student.getDepartment());
+        holder.textViewStatus.setText("Status: " + (student.getStatus() != null ? student.getStatus() : "N/A"));
+
+        if (student.getPhoto() != null) {
+            holder.imageViewStudentPhoto.setImageBitmap(student.getPhoto());
+        } else {
+            holder.imageViewStudentPhoto.setImageResource(android.R.drawable.ic_menu_gallery);
+        }
+
+        // Setup button click listeners
+        holder.btnView.setOnClickListener(v -> {
+            if (listener != null) {
+                listener.onViewClick(student.getStudentId());
+            }
+        });
+
+        holder.btnEdit.setOnClickListener(v -> {
+            if (listener != null) {
+                listener.onEditClick(student.getStudentId());
+            }
+        });
+
+        holder.btnDelete.setOnClickListener(v -> {
+            if (listener != null) {
+                listener.onDeleteClick(student.getStudentId());
+            }
+        });
     }
 
     @Override
     public int getItemCount() {
-        return students.size();
+        return students != null ? students.size() : 0;
     }
 
-    class StudentViewHolder extends RecyclerView.ViewHolder {
-        private TextView textViewName, textViewId, textViewDepartment, textViewStatus;
-        private ImageView imageViewPhoto;
+    public void updateStudents(List<Student> newStudents) {
+        this.students = newStudents;
+        notifyDataSetChanged();
+    }
 
-        public StudentViewHolder(@NonNull View itemView) {
+    static class StudentViewHolder extends RecyclerView.ViewHolder {
+        ImageView imageViewStudentPhoto;
+        TextView textViewStudentName;
+        TextView textViewStudentId;
+        TextView textViewDepartment;
+        TextView textViewStatus;
+        Button btnView;
+        Button btnEdit;
+        Button btnDelete;
+
+        StudentViewHolder(@NonNull View itemView) {
             super(itemView);
-            textViewName = itemView.findViewById(R.id.textViewName);
-            textViewId = itemView.findViewById(R.id.textViewId);
+            imageViewStudentPhoto = itemView.findViewById(R.id.imageViewStudentPhoto);
+            textViewStudentName = itemView.findViewById(R.id.textViewStudentName);
+            textViewStudentId = itemView.findViewById(R.id.textViewStudentId);
             textViewDepartment = itemView.findViewById(R.id.textViewDepartment);
             textViewStatus = itemView.findViewById(R.id.textViewStatus);
-            imageViewPhoto = itemView.findViewById(R.id.imageViewPhoto);
-
-            itemView.setOnClickListener(v -> {
-                if (listener != null) {
-                    listener.onStudentClick(students.get(getAdapterPosition()));
-                }
-            });
-
-            itemView.findViewById(R.id.buttonEdit).setOnClickListener(v -> {
-                if (listener != null) {
-                    listener.onStudentEdit(students.get(getAdapterPosition()));
-                }
-            });
-
-            itemView.findViewById(R.id.buttonDelete).setOnClickListener(v -> {
-                if (listener != null) {
-                    listener.onStudentDelete(students.get(getAdapterPosition()));
-                }
-            });
-        }
-
-        public void bind(Student student) {
-            textViewName.setText(student.getStudentName());
-            textViewId.setText("ID: " + student.getStudentId());
-            textViewDepartment.setText(student.getDepartment());
-            textViewStatus.setText(student.getStatus() != null ? student.getStatus() : "N/A");
-
-            if (student.getPhoto() != null) {
-                imageViewPhoto.setImageBitmap(student.getPhoto());
-                imageViewPhoto.setVisibility(View.VISIBLE);
-            } else {
-                imageViewPhoto.setVisibility(View.GONE);
-            }
+            btnView = itemView.findViewById(R.id.btnView);
+            btnEdit = itemView.findViewById(R.id.btnEdit);
+            btnDelete = itemView.findViewById(R.id.btnDelete);
         }
     }
 }
-
